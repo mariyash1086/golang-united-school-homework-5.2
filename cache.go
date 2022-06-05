@@ -19,7 +19,7 @@ func NewCache() Cache {
 func (receiver Cache) Get(key string) (string, bool) {
 
 	for key1, value1 := range receiver.arr {
-		if key1 == key && (value1.deadline.After(time.Now()) || value1.deadline.IsZero()) {
+		if key1 == key && value1.deadline.After(time.Now()) {
 			return value1.value, true
 		} else {
 			return value1.value, false
@@ -38,7 +38,7 @@ func (receiver Cache) Keys() []string {
 	var newArr []string
 	for key1, value1 := range receiver.arr {
 
-		if value1.deadline.After(time.Now()) || value1.deadline.IsZero() {
+		if value1.deadline.After(time.Now()) {
 			newArr = append(newArr, key1)
 
 		} else {
