@@ -52,8 +52,12 @@ func (receiver Cache) Keys() []string {
 
 	var newArr []string
 	for key1, value1 := range receiver.arr {
+
 		if value1.deadline.After(time.Now()) || value1.deadline.IsZero() {
 			newArr = append(newArr, key1)
+
+		} else {
+			delete(receiver.arr, key1)
 		}
 	}
 
