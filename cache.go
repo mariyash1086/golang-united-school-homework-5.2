@@ -4,24 +4,28 @@ import (
 	"time"
 )
 
+type someStruct struct {
+	value    string
+	deadline time.Time
+	dead     bool
+}
 type Cache struct {
 	//key      string
 	//value    string
-	arr      map[string]string
-	deadline time.Time
+	arr map[string]someStruct
 }
 
 func NewCache() Cache {
-	return Cache{}
+	return Cache{arr: make(map[string]someStruct)}
 }
 
 func (receiver Cache) Get(key string) (string, bool) {
 
 	for key1, value1 := range receiver.arr {
-		if key1 == key && (time.Now().Before(receiver.deadline) || time.Now().Equal(receiver.deadline)) {
-			return value1, true
+		if key1 == key && (time.Now().Before(value1.deadline) || time.Now().Equal(value1.deadline)) {
+			return value1.value, value1.dead
 		} else {
-			return value1, false
+			return value1.value, value1.dead
 		}
 
 	}
@@ -30,10 +34,11 @@ func (receiver Cache) Get(key string) (string, bool) {
 
 func (receiver Cache) Put(key, value string) {
 
-	for key1, _ := range receiver.arr {
+	for key1, value1 := range receiver.arr {
 		if key1 == key {
-			receiver.arr[key1] = value
-			receiver.deadline = time.Date(3999, 12, 31, 1, 1, 1, 1, time.Local)
+			value1.value = value
+			value1.deadline = time.Date(3999, 12, 31, 1, 1, 1, 1, time.Local)
+			value1.dead = false
 		}
 
 	}
@@ -42,8 +47,8 @@ func (receiver Cache) Put(key, value string) {
 func (receiver Cache) Keys() []string {
 
 	var newArr []string
-	for key1, _ := range receiver.arr {
-		if time.Now().Before(receiver.deadline) || time.Now().Equal(receiver.deadline) {
+	for key1, value1 := range receiver.arr {
+		if time.Now().Before(value1.deadline) || time.Now().Equal(value1.deadline) {
 			newArr = append(newArr, key1)
 		}
 
@@ -54,10 +59,11 @@ func (receiver Cache) Keys() []string {
 
 func (receiver Cache) PutTill(key, value string, deadline time.Time) {
 
-	for key1, _ := range receiver.arr {
+	for key1, value1 := range receiver.arr {
 		if key1 == key {
-			receiver.arr[key1] = value
-			receiver.deadline = deadline
+			value1.value = value
+			value1.deadline = deadline
+			value1.dead = false
 		}
 
 	}
