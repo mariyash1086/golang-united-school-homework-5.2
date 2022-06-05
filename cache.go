@@ -7,11 +7,8 @@ import (
 type Cache struct {
 	//key      string
 	//value    string
-	arr []struct {
-		key      string
-		value    string
-		deadline time.Time
-	}
+	arr      map[string]string
+	deadline time.Time
 }
 
 func NewCache() Cache {
@@ -20,11 +17,11 @@ func NewCache() Cache {
 
 func (receiver Cache) Get(key string) (string, bool) {
 
-	for _, elem := range receiver.arr {
-		if elem.key == key && (time.Now().Before(elem.deadline) || time.Now().Equal(elem.deadline)) {
-			return elem.value, true
+	for key1, value1 := range receiver.arr {
+		if key1 == key && (time.Now().Before(receiver.deadline) || time.Now().Equal(receiver.deadline)) {
+			return value1, true
 		} else {
-			return elem.value, false
+			return value1, false
 		}
 
 	}
@@ -33,10 +30,10 @@ func (receiver Cache) Get(key string) (string, bool) {
 
 func (receiver Cache) Put(key, value string) {
 
-	for _, elem := range receiver.arr {
-		if elem.key == key {
-			elem.value = value
-			elem.deadline = time.Date(3999, 12, 31, 1, 1, 1, 1, time.Local)
+	for key1, _ := range receiver.arr {
+		if key1 == key {
+			receiver.arr[key1] = value
+			receiver.deadline = time.Date(3999, 12, 31, 1, 1, 1, 1, time.Local)
 		}
 
 	}
@@ -45,9 +42,9 @@ func (receiver Cache) Put(key, value string) {
 func (receiver Cache) Keys() []string {
 
 	var newArr []string
-	for _, elem := range receiver.arr {
-		if time.Now().Before(elem.deadline) || time.Now().Equal(elem.deadline) {
-			newArr = append(newArr, elem.key)
+	for key1, _ := range receiver.arr {
+		if time.Now().Before(receiver.deadline) || time.Now().Equal(receiver.deadline) {
+			newArr = append(newArr, key1)
 		}
 
 	}
@@ -57,10 +54,10 @@ func (receiver Cache) Keys() []string {
 
 func (receiver Cache) PutTill(key, value string, deadline time.Time) {
 
-	for _, elem := range receiver.arr {
-		if elem.key == key {
-			elem.value = value
-			elem.deadline = deadline
+	for key1, _ := range receiver.arr {
+		if key1 == key {
+			receiver.arr[key1] = value
+			receiver.deadline = deadline
 		}
 
 	}
