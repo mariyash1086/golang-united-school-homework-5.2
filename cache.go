@@ -7,7 +7,7 @@ import (
 type SomeStruct struct {
 	value    string
 	deadline time.Time
-	dead     bool
+	//dead     bool
 }
 type Cache struct {
 	//key      string
@@ -22,7 +22,7 @@ func NewCache() Cache {
 func (receiver Cache) Get(key string) (string, bool) {
 
 	for key1, value1 := range receiver.arr {
-		if key1 == key && (value1.deadline.After(time.Now()) || value1.deadline.IsZero()) {
+		if key1 == key && (value1.deadline.After(time.Now()) || value1.deadline.IsZero() || value1.deadline.Equal(time.Now())) {
 			return value1.value, true
 		} else {
 			return value1.value, false
@@ -38,10 +38,10 @@ func (receiver Cache) Put(key, value string) {
 		if key1 == key {
 			value1.value = value
 			value1.deadline = time.Time{}
-			value1.dead = false
+			///value1.dead = false
 
 		} else {
-			receiver.arr[key] = SomeStruct{value: value, deadline: time.Time{}, dead: false}
+			receiver.arr[key] = SomeStruct{value: value, deadline: time.Time{}}
 
 		}
 
@@ -70,9 +70,9 @@ func (receiver Cache) PutTill(key, value string, deadline time.Time) {
 		if key1 == key {
 			value1.value = value
 			value1.deadline = deadline
-			value1.dead = false
+			//		value1.dead = false
 		} else {
-			receiver.arr[key] = SomeStruct{value: value, deadline: deadline, dead: false}
+			receiver.arr[key] = SomeStruct{value: value, deadline: deadline}
 		}
 
 	}
