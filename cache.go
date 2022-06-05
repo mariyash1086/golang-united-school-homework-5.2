@@ -25,7 +25,7 @@ func (receiver Cache) Get(key string) (string, bool) {
 			return value1.value, false
 		}
 	}
-	return "", true
+	return key, false
 }
 
 func (receiver Cache) Put(key, value string) {
