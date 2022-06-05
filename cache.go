@@ -37,11 +37,11 @@ func (receiver Cache) Put(key, value string) {
 	for key1, value1 := range receiver.arr {
 		if key1 == key {
 			value1.value = value
-			value1.deadline = time.Date(3999, 12, 31, 1, 1, 1, 1, time.Local)
+			value1.deadline = time.Time{}
 			value1.dead = false
 
 		} else {
-			receiver.arr[key] = SomeStruct{value: value, deadline: time.Date(3999, 12, 31, 1, 1, 1, 1, time.Local), dead: false}
+			receiver.arr[key] = SomeStruct{value: value, deadline: time.Time{}, dead: false}
 
 		}
 
