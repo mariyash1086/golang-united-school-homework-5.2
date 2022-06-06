@@ -18,11 +18,11 @@ func NewCache() Cache {
 
 func (receiver Cache) Get(key string) (string, bool) {
 
-	for key1, value1 := range receiver.arr {
-		if key1 == key && value1.deadline.IsZero() {
-			return value1.value, true
+	for myKey, myValue := range receiver.arr {
+		if myKey == key && (myValue.deadline.IsZero() || myValue.deadline.After(time.Now())) {
+			return myValue.value, true
 		} else {
-			return value1.value, false
+			return "", false
 		}
 	}
 	return "", false
@@ -36,13 +36,13 @@ func (receiver Cache) Put(key, value string) {
 func (receiver Cache) Keys() []string {
 
 	var newArr []string
-	for key1, value1 := range receiver.arr {
+	for myKey, myValue := range receiver.arr {
 
-		if value1.deadline.IsZero() {
-			newArr = append(newArr, key1)
+		if myValue.deadline.IsZero() || myValue.deadline.After(time.Now()) {
+			newArr = append(newArr, myKey)
 
 		} else {
-			delete(receiver.arr, key1)
+			delete(receiver.arr, myKey)
 		}
 	}
 
