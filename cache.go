@@ -21,19 +21,18 @@ func (receiver Cache) Get(key string) (string, bool) {
 	for myKey, myValue := range receiver.arr {
 		if myKey == key && (myValue.deadline.IsZero() || myValue.deadline.After(time.Now())) {
 			return myValue.value, true
-		} else {
-			return "", false
 		}
 	}
+
 	return "", false
 }
 
-func (receiver Cache) Put(key, value string) {
+func (receiver *Cache) Put(key, value string) {
 
 	receiver.arr[key] = SomeStruct{value: value, deadline: time.Time{}}
 }
 
-func (receiver Cache) Keys() []string {
+func (receiver *Cache) Keys() []string {
 
 	var newArr []string
 	for myKey, myValue := range receiver.arr {
@@ -49,7 +48,7 @@ func (receiver Cache) Keys() []string {
 	return newArr
 }
 
-func (receiver Cache) PutTill(key, value string, deadline time.Time) {
+func (receiver *Cache) PutTill(key, value string, deadline time.Time) {
 
 	receiver.arr[key] = SomeStruct{value: value, deadline: deadline}
 }
